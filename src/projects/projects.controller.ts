@@ -1,9 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ProjectService } from './project.service';
+import { ProjectService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { Project } from './entities/project.entity';
 
-@Controller('project')
+@Controller('projects')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
@@ -13,7 +14,7 @@ export class ProjectController {
   }
 
   @Get()
-  findAll() {
+  async findAll(): Promise<Project[]> {
     return this.projectService.findAll();
   }
 
