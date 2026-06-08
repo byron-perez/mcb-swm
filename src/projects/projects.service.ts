@@ -2,38 +2,26 @@ import { Injectable } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project } from './entities/project.entity';
+import { ProjectsRepository } from './entities/projects-repository';
 
 @Injectable()
 export class ProjectService {
+  private projectsRepository: ProjectsRepository;
 
-  private readonly projects: Project[] = [
+  constructor(projectsRepository: ProjectsRepository) {
+    this.projectsRepository = projectsRepository;
+  }
 
-      {
-        "name": "Tissquest",
-        "desc": "Atlas de histología general.",
-      },
-      {
-        "name": "Destino Genético",
-        "desc": "Calculador de probabilidad de mutaciones.",
-      },
-      {
-        "name": "Lente de Abstracción",
-        "desc": "Lenguaje de modelado de procesos biológicos.",
-      },
-      {
-        "name": "Pomo",
-        "desc": "Temporizador alarma para arduino.",
-      },
-  ]
+  private readonly projects: Project[] = []
 
   create(createProjectDto: CreateProjectDto) {
     let newProject: Project = new Project(createProjectDto.name, createProjectDto.desc);
-    this.projects.push(newProject);
-    return newProject;
+    let newId = this.projectsRepository.store(newProject);
+    return newId;
   }
 
   findAll() {
-    return this.projects;
+    return this.projectsRepository.getAll();
   }
 
   findOne(id: number) {
